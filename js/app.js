@@ -145,7 +145,18 @@ class UI {
 
   // delete expense
   deleteExpense = ele => {
+    const id = parseInt(ele.dataset.id);
+    const parent = ele.parentElement.parentElement.parentElement;
 
+    // remove parent (x3) from the dom
+    this.expenseList.removeChild(parent);
+    
+    // remove from itemList
+    const tempList = this.itemList.filter(item => item.id !== id);
+    this.itemList = tempList;
+
+    // show balance
+    this.showBalance();
   }
 }
 
