@@ -51,7 +51,7 @@ class UI {
   totalExpense = () => {
     let total = 0;
     if (this.itemList.length > 0) {
-      total = this.itemList.reduce((acc,item) => {
+      total = this.itemList.reduce((acc, item) => {
         acc += item.amount;
         return acc;
       }, 0);
@@ -83,6 +83,9 @@ class UI {
         title: expenseValue,
         amount
       }
+
+      // increase this.itemID
+      this.itemID++;
 
       // add expense obj to this.itemList
       this.itemList.push(expense);
@@ -116,6 +119,34 @@ class UI {
     `;
     this.expenseList.appendChild(div);
   }
+
+  // edit expense
+  editExpense = ele => {
+    const id = parseInt(ele.dataset.id);
+    const parent = ele.parentElement.parentElement.parentElement;
+
+    // remove parent (x3) from the dom
+    this.expenseList.removeChild(parent);
+
+    // get expense obj from this.itemList
+    const expense = this.itemList.filter(item => item.id === id)[0];
+
+    // show value
+    this.expenseInput.value = expense.title;
+    this.amountInput.value = expense.amount;
+
+    // remove from itemList
+    const tempList = this.itemList.filter(item => item.id !== id);
+    this.itemList = tempList;
+
+    // show balance
+    this.showBalance();
+  }
+
+  // delete expense
+  deleteExpense = ele => {
+
+  }
 }
 
 const eventListeners = () => {
@@ -139,8 +170,13 @@ const eventListeners = () => {
   })
   // expense list click
   expenseList.addEventListener("click", e => {
-    e.preventDefault();
-    console.log("expense list click");
+    const ele = e.target.parentElement;
+    // console.log(ele);
+    if (ele.classList.contains("edit-icon")) {
+      ui.editExpense(ele);
+    } else if (ele.classList.contains("delete-icon")) {
+      ui.deleteExpense(ele);
+    }
   })
 }
 
